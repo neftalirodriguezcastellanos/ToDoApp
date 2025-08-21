@@ -1,16 +1,10 @@
 import useApi from "../../hooks/useApi";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { ResponseGeneric, Task } from "../../models/Interfaces";
 import { endpoint_tasks } from "../../settings/ApiConfig";
-
-type TaskFormData = {
-  id?: string;
-  title: string;
-  description?: string;
-  dueDate?: string;
-  color?: string;
-};
+import type { TaskFormData } from "../../models/Interfaces";
+import { useAuth } from "../../context/AuthContext";
 
 const modalStyle = {
   // eslint-disable-next-line @typescript-eslint/prefer-as-const
@@ -45,6 +39,7 @@ const useTaskFormModalHandler = ({
   onClose,
   task,
 }: TaskFormModalProps) => {
+  const { setAlert } = useAuth();
   const { post, put, error, loading } = useApi();
   const {
     register,
@@ -80,13 +75,9 @@ const useTaskFormModalHandler = ({
     }
   }, [task, reset]);
 
-  const [submitError, setSubmitError] = useState<string | null>(null);
-
   const onSubmit = async (data: TaskFormData) => {
-    setSubmitError(null);
-
     const payload = {
-      title: data.title.trim(),
+      title: data.title?.trim(),
       ...(data.id && { id: data.id }),
       ...(data.description && { description: data.description.trim() }),
       ...(data.dueDate && { dueDate: data.dueDate }),
@@ -112,21 +103,27 @@ const useTaskFormModalHandler = ({
         reset();
         onTaskCreated();
         onClose();
+        setAlert({
+          message: `La tarea se ${task ? "actualizó" : "creó"} correctamente`,
+          severity: "success",
+        });
       } else {
-        setSubmitError(
-          response.message ||
-            `No se pudo ${
-              task ? "crear" : "actualizar"
-            } la tarea. Revisa los datos e inténtalo de nuevo.`
-        );
+        setAlert({
+          message:
+            response.message ||
+            `Error al ${task ? "actualizar" : "crear"} la tarea`,
+          severity: "error",
+        });
       }
     } else {
-      setSubmitError(error || "Error al iniciar sesión");
+      setAlert({
+        message: error || `Error al ${task ? "crear" : "actualizar"} la tarea`,
+        severity: "error",
+      });
     }
   };
 
   return {
-    submitError,
     onSubmit,
     isSubmitting,
     errors,
@@ -137,4 +134,3 @@ const useTaskFormModalHandler = ({
 };
 
 export { useTaskFormModalHandler, modalStyle, colors };
-export type { TaskFormData };

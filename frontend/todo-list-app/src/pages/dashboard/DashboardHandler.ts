@@ -2,9 +2,12 @@ import { useState } from "react";
 import type { ResponseGeneric, Task } from "../../models/Interfaces";
 import useApi from "../../hooks/useApi";
 import { endpoint_tasks } from "../../settings/ApiConfig";
+import type { TaskFormData } from "../../models/Interfaces";
+import { useAuth } from "../../context/AuthContext";
 
 const useDashboardHandler = () => {
-  const { get, del, error, loading } = useApi();
+  const { setAlert } = useAuth();
+  const { get, del, put, error, loading } = useApi();
   const [tasksList, setTasksList] = useState<Task[]>([]);
   const [task, setTask] = useState<Task | null>(null);
 
@@ -19,8 +22,8 @@ const useDashboardHandler = () => {
       } else {
         setTasksList([]);
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      console.error("Error fetching tasks:", error);
       setTasksList([]);
     }
   };
@@ -48,13 +51,53 @@ const useDashboardHandler = () => {
       if (response && response.isSuccess) {
         await getTasks();
       } else {
-        console.error("Failed to delete task");
+        setAlert({
+          message: "Error al eliminar la tarea",
+          severity: "error",
+        });
       }
     } catch (error) {
-      console.error("Error deleting task:", error);
+      setAlert({
+        message:
+          "Error al eliminar la tarea: " +
+          (error instanceof Error ? error.message : "Error desconocido"),
+        severity: "error",
+      });
     } finally {
       setOpenConfirmDialog(false);
       setTask(null);
+    }
+  };
+
+  const handleChangeCheck = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: string
+  ) => {
+    const payload: TaskFormData = {
+      id: id,
+      isCompleted: event.target.checked,
+    };
+
+    const response = await put<TaskFormData, ResponseGeneric<boolean>>(
+      endpoint_tasks,
+      payload
+    );
+
+    if (response) {
+      if (response.isSuccess) {
+        getTasks();
+      } else {
+        setAlert({
+          message:
+            response.message || "Error al actualizar el estado de la tarea",
+          severity: "error",
+        });
+      }
+    } else {
+      setAlert({
+        message: "Error al actualizar el estado de la tarea",
+        severity: "error",
+      });
     }
   };
 
@@ -72,6 +115,7 @@ const useDashboardHandler = () => {
     openConfirmDialog,
     setOpenConfirmDialog,
     handleDeleteTask,
+    handleChangeCheck,
   };
 };
 

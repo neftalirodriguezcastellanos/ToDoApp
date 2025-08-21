@@ -31,14 +31,8 @@ const TaskFormModal = ({
   onTaskCreated,
   task,
 }: TaskFormModalProps) => {
-  const {
-    submitError,
-    onSubmit,
-    isSubmitting,
-    errors,
-    register,
-    handleSubmit,
-  } = useTaskFormModalHandler({ onTaskCreated, onClose, task });
+  const { onSubmit, isSubmitting, errors, register, handleSubmit } =
+    useTaskFormModalHandler({ onTaskCreated, onClose, task });
   return (
     <Modal
       open={open}
@@ -64,14 +58,6 @@ const TaskFormModal = ({
               <CloseIcon />
             </IconButton>
           </Box>
-
-          {submitError && (
-            <Box mb={2}>
-              <Typography color="error" variant="body2">
-                {submitError}
-              </Typography>
-            </Box>
-          )}
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <TextField

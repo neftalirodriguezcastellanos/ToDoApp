@@ -78,6 +78,7 @@ const useApi = () => {
         return response.data;
       } catch (err) {
         const error = err as AxiosError<ApiError>;
+        console.log("🚀 ~ useApi ~ error:", error);
         if (error.response?.data?.errors) {
           const messages = Object.values(error.response.data.errors).flat();
           setError(messages.join(" "));

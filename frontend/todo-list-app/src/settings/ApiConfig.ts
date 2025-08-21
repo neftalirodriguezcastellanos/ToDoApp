@@ -1,4 +1,6 @@
 const endpoint_login = "Users/login";
 const endpoint_tasks = "Tasks";
 
-export { endpoint_login, endpoint_tasks };
+const endpoint_register = "Users/create";
+
+export { endpoint_login, endpoint_tasks, endpoint_register };

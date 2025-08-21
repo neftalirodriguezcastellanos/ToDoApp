@@ -7,12 +7,26 @@ type AuthContextType = {
   login: (newToken: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
+  fullName: string | null;
+  setFullName: (name: string | null) => void;
+  alert: {
+    message: string;
+    severity: "error" | "success";
+  } | null;
+  setAlert: (
+    alert: { message: string; severity: "error" | "success" } | null
+  ) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const [fullName, setFullName] = useState<string | null>(null);
+  const [alert, setAlert] = useState<{
+    message: string;
+    severity: "error" | "success";
+  } | null>(null);
 
   // Recuperar token del localStorage al cargar la app
   useEffect(() => {
@@ -23,7 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = (newToken: string) => {
-    console.log("🚀 ~ login ~ newToken:", newToken);
     setToken(newToken);
     localStorage.setItem("authToken", newToken);
   };
@@ -36,7 +49,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        login,
+        logout,
+        isAuthenticated,
+        fullName,
+        setFullName,
+        alert,
+        setAlert,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

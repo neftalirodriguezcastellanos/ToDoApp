@@ -4,9 +4,10 @@ import Login from "./pages/login";
 import Dashboard from "./pages/dashboard";
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
+import AppAlert from "./components/AppAlert";
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, alert, setAlert } = useAuth();
 
   useEffect(() => {
     // Si está autenticado y entra a /login, redirigir a /dashboard
@@ -16,14 +17,17 @@ function App() {
   }, [isAuthenticated]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/dashboard"
-        element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
-      />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+        />
+      </Routes>
+      {alert && <AppAlert alert={alert} onClose={() => setAlert(null)} />}
+    </>
   );
 }
 
