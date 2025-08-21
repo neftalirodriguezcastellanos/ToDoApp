@@ -18,5 +18,6 @@ namespace ToDoList.Domain.Tasks
         public DateTime? ModifiedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public bool IsDeleted { get; set; } = false;
+        public string? Color { get; set; } = "#ffffff"; // Default color is white
     }
 }

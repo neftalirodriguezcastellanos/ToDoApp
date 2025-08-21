@@ -7,6 +7,7 @@ namespace ToDoList.Application.Tasks.Create
         string Title,
         string? Description,
         DateTime? DueDate,
-        Guid? UserId
+        Guid? UserId,
+        string? Color
     ) : IRequest<ErrorOr<ApiResult<bool>>>;
 }
