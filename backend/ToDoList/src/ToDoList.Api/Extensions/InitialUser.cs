@@ -14,24 +14,24 @@ namespace ToDoList.Web.Api.Extensions
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-                var adminRole = "Admin";
+                var role = "User";
 
-                if (!await roleManager.RoleExistsAsync(adminRole))
+                if (!await roleManager.RoleExistsAsync(role))
                 {
-                    await roleManager.CreateAsync(new ApplicationRole { Name = adminRole });
+                    await roleManager.CreateAsync(new ApplicationRole { Name = role });
                 }
 
                 if (!userManager.Users.Any())
                 {
                     var adminUser = new ApplicationUser
                     {
-                        UserName = "admin@sample.mx",
-                        Email = "admin@sample.mx",
-                        FullName = "Admin User",
+                        UserName = "user@todolist.mx",
+                        Email = "user@todolist.mx",
+                        FullName = "Initial User",
                     };
 
-                    await userManager.CreateAsync(adminUser, "Admin@123");
-                    await userManager.AddToRoleAsync(adminUser, adminRole);
+                    await userManager.CreateAsync(adminUser, "User@123");
+                    await userManager.AddToRoleAsync(adminUser, role);
                 }
             }
             catch (Exception ex)

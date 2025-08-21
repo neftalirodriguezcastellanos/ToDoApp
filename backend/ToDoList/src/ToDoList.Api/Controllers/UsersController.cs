@@ -34,6 +34,7 @@ namespace ToDoList.Web.Api.Controllers
         }
 
         [HttpPost("create")]
+        [AllowAnonymous]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
             var result = await _mediator.Send(command);

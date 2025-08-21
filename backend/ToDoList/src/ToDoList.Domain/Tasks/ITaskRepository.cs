@@ -7,9 +7,9 @@ namespace ToDoList.Domain.Tasks
 {
     public interface ITaskRepository
     {
-        Task<ToDoTask?> GetById(Guid id);
+        Task<ToDoTask?> GetById(Guid id, Guid userId);
         Task Add(ToDoTask task);
-        Task<List<ToDoTask>> GetAll();
+        Task<List<ToDoTask>> GetAll(Guid userId);
         void Update(ToDoTask task);
         void Delete(ToDoTask task);
     }
