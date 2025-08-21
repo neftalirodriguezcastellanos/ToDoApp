@@ -12,9 +12,12 @@ namespace ToDoList.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<ToDoTask?> GetById(Guid id)
+        public async Task<ToDoTask?> GetById(Guid id, Guid userId)
         {
-            return await _context.Tasks.FindAsync(id);
+            // Obtiene la tarea por Id y filtra por el UserId
+            return await _context.Tasks
+                .Where(t => t.Id == id && t.UserId == userId)
+                .FirstOrDefaultAsync();
         }
 
         public async Task Add(ToDoTask task)
@@ -22,11 +25,13 @@ namespace ToDoList.Infrastructure.Persistence.Repositories
             await _context.Tasks.AddAsync(task);
         }
 
-        public async Task<List<ToDoTask>> GetAll()
+        public async Task<List<ToDoTask>> GetAll(Guid userId)
         {
-            return await _context.Tasks.ToListAsync();
+            // Obtiene todas las tareas del usuario especificado
+            return await _context.Tasks
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
         }
-
         public void Update(ToDoTask task)
         {
             _context.Tasks.Update(task);

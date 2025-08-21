@@ -16,11 +16,12 @@ namespace ToDoList.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public Task<string> GenerateJwtTokenAsync(string email, DateTime? expires = null)
+        public Task<string> GenerateJwtTokenAsync(string email, Guid userId, DateTime? expires = null)
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email, email)
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(

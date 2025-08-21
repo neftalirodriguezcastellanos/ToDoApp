@@ -28,7 +28,7 @@ namespace ToDoList.Application.Users.Login
             }
 
             DateTime? expires = DateTime.Now.AddDays(7);
-            var token = await _authService.GenerateJwtTokenAsync(user.Email, expires);
+            var token = await _authService.GenerateJwtTokenAsync(user.Email, user.Id, expires);
 
             var userLoginDto = new UserLoginDto(user.Email, new UserToken(token, expires), user.Roles);
 
