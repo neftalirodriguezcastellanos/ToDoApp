@@ -20,7 +20,10 @@ namespace ToDoList.Application.Tasks.GetAll
         {
             var tasks = await _unitOfWork.Tasks.GetAll(request.UserId);
 
-            var taskResponses = tasks.Select(task => new TaskResponse(
+            var taskResponses = tasks
+                .OrderBy(t => t.IsCompleted)
+                .ThenByDescending(t => t.DueDate)
+                .Select(task => new TaskResponse(
                     task.Id,
                     task.Title,
                     task.Description,
@@ -29,7 +32,8 @@ namespace ToDoList.Application.Tasks.GetAll
                     task.ModifiedAt,
                     task.IsCompleted,
                     task.Color
-                )).ToList();
+                ))
+                .ToList();
 
             return new ApiResult<List<TaskResponse>>(
                 Data: taskResponses ?? new List<TaskResponse>(),

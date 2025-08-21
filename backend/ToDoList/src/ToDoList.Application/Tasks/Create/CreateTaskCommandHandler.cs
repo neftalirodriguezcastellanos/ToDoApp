@@ -25,7 +25,8 @@ namespace ToDoList.Application.Tasks.Create
                 DueDate = request.DueDate,
                 IsCompleted = false,
                 CreatedAt = DateTime.UtcNow,
-                UserId = request.UserId ?? throw new ArgumentNullException(nameof(request.UserId))
+                UserId = request.UserId ?? throw new ArgumentNullException(nameof(request.UserId)),
+                Color = request.Color,
             };
 
             await _unitOfWork.Tasks.Add(newTask);

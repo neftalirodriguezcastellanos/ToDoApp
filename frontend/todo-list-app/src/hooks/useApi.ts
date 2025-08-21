@@ -1,5 +1,5 @@
 // src/hooks/useApi.ts
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import axios, { AxiosError } from "axios";
 import { type ApiError } from "../models/Interfaces";
 
@@ -14,18 +14,14 @@ const useApi = () => {
     headers: { "Content-Type": "application/json" },
   });
 
-  useEffect(() => {
-    const requestInterceptor = api.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem("authToken");
-        if (token) config.headers.Authorization = `Bearer ${token}`;
-        return config;
-      },
-      (err) => Promise.reject(err)
-    );
-
-    return () => api.interceptors.request.eject(requestInterceptor);
-  }, []);
+  // Interceptor para añadir el Bearer automáticamente
+  api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 
   const get = useCallback(async <R>(endpoint: string): Promise<R | null> => {
     setLoading(true);
@@ -82,6 +78,7 @@ const useApi = () => {
         return response.data;
       } catch (err) {
         const error = err as AxiosError<ApiError>;
+        console.log("🚀 ~ useApi ~ error:", error);
         if (error.response?.data?.errors) {
           const messages = Object.values(error.response.data.errors).flat();
           setError(messages.join(" "));
@@ -96,13 +93,13 @@ const useApi = () => {
     []
   );
 
-  const del = useCallback(async (endpoint: string): Promise<boolean> => {
+  const del = useCallback(async <R>(endpoint: string): Promise<R | null> => {
     setLoading(true);
     setError(null);
     try {
-      await api.delete(endpoint);
-      setData(null);
-      return true;
+      const response = await api.delete(endpoint);
+      setData(response.data);
+      return response.data;
     } catch (err) {
       const error = err as AxiosError<ApiError>;
       if (error.response?.data?.errors) {
@@ -111,7 +108,7 @@ const useApi = () => {
       } else {
         setError("Error al eliminar el registro");
       }
-      return false;
+      return null;
     } finally {
       setLoading(false);
     }
