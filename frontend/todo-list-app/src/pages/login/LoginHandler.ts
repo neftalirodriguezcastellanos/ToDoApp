@@ -23,7 +23,6 @@ const useLoginHandler = () => {
         LoginFormData,
         ResponseGeneric<LoginResponse>
       >(endpoint_login, { email, password });
-      console.log("🚀 ~ handleLogin ~ error:", error);
       if (response) {
         if (response.isSuccess) {
           const token = response?.data?.dataAuth.token;

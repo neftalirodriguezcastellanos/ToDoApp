@@ -24,3 +24,14 @@ export type ApiError = {
   };
   traceId: string;
 };
+
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  dueDate?: Date;
+  createdAt: Date;
+  modifiedAt: Date;
+  isCompleted: boolean;
+  color?: string;
+}
