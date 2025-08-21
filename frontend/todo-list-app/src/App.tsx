@@ -1,0 +1,30 @@
+import { useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/login";
+import Dashboard from "./pages/dashboard";
+import { useAuth } from "./context/AuthContext";
+import "./App.css";
+
+function App() {
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    // Si está autenticado y entra a /login, redirigir a /dashboard
+    if (isAuthenticated && window.location.pathname === "/login") {
+      window.location.href = "/dashboard";
+    }
+  }, [isAuthenticated]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="/dashboard"
+        element={isAuthenticated ? <Dashboard /> : <Navigate to="/" />}
+      />
+    </Routes>
+  );
+}
+
+export default App;
