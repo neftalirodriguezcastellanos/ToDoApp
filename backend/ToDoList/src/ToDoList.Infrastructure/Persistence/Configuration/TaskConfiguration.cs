@@ -21,6 +21,7 @@ namespace ToDoList.Infrastructure.Persistence.Configuration
             builder.Property(e => e.ModifiedAt);
             builder.Property(e => e.DeletedAt);
             builder.Property(e => e.IsDeleted).IsRequired();
+            builder.Property(e => e.Color).HasMaxLength(7); // Assuming color is stored as a hex string
 
             // Query Filter: Filtra automáticamente las tareas eliminadas
             builder.HasQueryFilter(t => !t.IsDeleted);

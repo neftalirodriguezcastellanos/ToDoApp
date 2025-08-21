@@ -27,7 +27,8 @@ namespace ToDoList.Application.Tasks.GetAll
                     task.DueDate,
                     task.CreatedAt,
                     task.ModifiedAt,
-                    task.IsCompleted
+                    task.IsCompleted,
+                    task.Color
                 )).ToList();
 
             return new ApiResult<List<TaskResponse>>(

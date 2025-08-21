@@ -8,6 +8,7 @@ namespace ToDoList.Application.Tasks.Update
         string? Description,
         DateTime? DueDate,
         bool? IsCompleted,
-        Guid? UserId
+        Guid? UserId,
+        string? Color
     ) : IRequest<ErrorOr<ApiResult<bool>>>;
 }

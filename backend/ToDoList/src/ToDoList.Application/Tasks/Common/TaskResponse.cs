@@ -8,6 +8,7 @@ namespace ToDoList.Application.Tasks.Common
         DateTime? DueDate,
         DateTime CreatedAt,
         DateTime? ModifiedAt,
-        bool IsCompleted
+        bool IsCompleted,
+        string? Color
     );
 }

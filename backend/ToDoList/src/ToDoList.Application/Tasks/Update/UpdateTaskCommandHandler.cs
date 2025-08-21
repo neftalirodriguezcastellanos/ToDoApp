@@ -57,6 +57,12 @@ namespace ToDoList.Application.Tasks.Update
                 hasChanges = true;
             }
 
+            if (request.Color != null && task.Color != request.Color)
+            {
+                task.Color = request.Color;
+                hasChanges = true;
+            }
+
             // Si no hay cambios, no guardar
             if (!hasChanges)
             {

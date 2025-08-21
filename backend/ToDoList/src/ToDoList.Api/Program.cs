@@ -7,6 +7,15 @@ using ToDoList.Web.Api.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()    // ✅ Permite cualquier origen (frontend en cualquier puerto)
+              .AllowAnyMethod()    // ✅ GET, POST, PUT, DELETE, etc.
+              .AllowAnyHeader();   // ✅ Cualquier encabezado (Content-Type, Authorization, etc.)
+    });
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 // builder.Services.AddOpenApi();
 builder.Services.AddPresentation(builder.Configuration)
@@ -27,6 +36,8 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 

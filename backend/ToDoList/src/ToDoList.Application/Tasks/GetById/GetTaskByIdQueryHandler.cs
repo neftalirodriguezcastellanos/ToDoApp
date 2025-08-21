@@ -30,7 +30,8 @@ namespace ToDoList.Application.Tasks.GetById
                     task.DueDate,
                     task.CreatedAt,
                     task.ModifiedAt,
-                    task.IsCompleted
+                    task.IsCompleted,
+                    task.Color
                 ),
                 IsSuccess: true,
                 Message: "Tarea obtenido correctamente"
